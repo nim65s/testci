@@ -1,0 +1,48 @@
+name: test github actions
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - main
+  pull_request_target:
+    branches:
+      - main
+
+
+jobs:
+  wheel:
+    name: "${{ matrix.build }} ${{ matrix.os }} ${{ matrix.arch }}"
+    runs-on: "${{ matrix.os }}"
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "macos-latest"]
+        arch: ["x86_64", "aarch64"]
+        build: ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*", "pp38-*", "pp39-*", "pp310-*"]
+        exclude:
+          - os: "macos-latest"
+            arch: "aarch64"
+          - arch: "aarch64"
+            build: "pp38-*"
+          - arch: "aarch64"
+            build: "pp39-*"
+          - arch: "aarch64"
+            build: "pp310-*"
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo run wheel
+
+  sdist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo run sdist
+
+  release:
+    needs: ["wheel", "sdist"]
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo run release
