@@ -45,6 +45,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: echo git verify-tag --raw ${{ github.ref_name }}
+      - run: git verify-tag --raw ${{ github.ref_name }}
+      - run: git verify-tag --raw ${{ github.ref_name }} 2>&1 | tee test
+      - run: cat test
       - name: validate signature
         run: >
           git verify-tag --raw ${{ github.ref_name }} 2>&1
