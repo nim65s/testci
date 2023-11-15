@@ -45,4 +45,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: validate signature
+        run: >
+          git verify-tag --raw ${{ github.ref_name }} 2>&1
+          | grep -q 'VALIDSIG 9B1A79065D2F2B806C8A5A1C7D2ACDAF4653CF28'
       - run: echo run release
