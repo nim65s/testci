@@ -47,6 +47,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+      - run: curl https://github.com/nim65s.gpg | gpg --import
       - run: echo git verify-tag --raw ${{ github.ref_name }}
       - run: git verify-tag --raw ${{ github.ref_name }}
       - run: git verify-tag --raw ${{ github.ref_name }} 2>&1 | tee test
